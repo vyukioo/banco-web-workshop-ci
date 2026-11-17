@@ -1,0 +1,43 @@
+# [script de pipeline] YAML (Github Actions, Gitlab, Azure DevOps, CircleCI, etc.)
+
+#  [declaracoes]
+#    [config do so] (Windows/Linux/Mac, Chrome/Firefox, v1/v2)
+#    [deps do projeto] (node/npm/yarn, java/maven/gradle, python/pip)
+#    [variaveis] (variaveis de ambientes, chaves de acesso)
+#    [projetos] (aplicacoes em teste, projeto de testes, projeto auxiliar, etc)
+#    [acoes e passos] (instalar as deps, subir server, executar testes, publicar relatorios, etc.)
+
+#  [declaracoes]
+name: CI Mentoria
+
+# gatilhos ou triggers (quando vai executar)
+on:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    #      [config do so] (Windows/Linux/Mac, Chrome/Firefox, v1/v2)
+    runs-on: ubuntu-latest
+  
+    #    [variaveis] (variaveis de ambientes, chaves de acesso)
+    env:
+      API_BASE_URL: 'http://localhost:3000'
+      PORT: 4000
+
+    steps: 
+      #    [projetos] (aplicacoes em teste, projeto de testes, projeto auxiliar, etc)
+      - name: Checkout/Clone do Repositorio
+        uses: actions/checkout@v4
+
+      #    [acoes e passos] (instalar as deps, subir server, executar testes, publicar relatorios, etc.)
+      - name: Instalando deps
+        run: npm install
+
+      - name: Iniciar o Mock Server
+        run: npm run mock-server
+
+      - name: Iniciar a aplicação
+        run: npm run server
+
+      - name: Executar os testes
+        run: npx cypress run
